@@ -1,17 +1,27 @@
 import React, {Component} from 'react';
-import {View, Image, Text, StyleSheet} from 'react-native';
+import {View, Image, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
+
+// API URL - https://picsum.photos/v2/list
 
 class ListCard extends Component{
+
     render(){
 
-        const {imageStyle, cardStyle, textViewStyle, tColor} = styles;
+        const {imageStyle, cardStyle, textViewStyle, tColor, downloadButtonStyle} = styles;
         const {image, ownerName} = this.props;
         return (
             <View style={cardStyle}>
-                <Image style={imageStyle} source={image} />
+                <Image style={imageStyle} source={{uri: image}} />
                 <View style={textViewStyle}>
                     <Text style={tColor}>{ownerName}</Text>
                 </View>
+                <TouchableOpacity 
+                    style={downloadButtonStyle}
+                    onPress={() => {
+                        Alert.alert("Download Button Pressed");
+                    }}>
+                    <Text style={{color:'white', fontWeight: 'bold', fontSize: 25}}>Download</Text>
+                </TouchableOpacity>
             </View>
         )
     };
@@ -39,7 +49,15 @@ const styles = StyleSheet.create({
     },
     tColor:{
         color:'black',
-    }
+        fontWeight: 'bold',
+    },
+    downloadButtonStyle:{
+        backgroundColor: 'darkgreen',
+        width: '90%',
+        height: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
 });
 
 export default ListCard;

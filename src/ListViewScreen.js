@@ -1,8 +1,49 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, ScrollView, FlatList} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, FlatList, ActivityIndicator} from 'react-native';
 import ListCard from './reusableComponents/ListCard';
+import axios from 'axios';
 
 class ListViewScreen extends Component {
+
+    state = {
+        imageList: [],
+        showLoader: false,
+    };
+
+    renderLoader() {
+        if (this.state.showLoader){
+            return <ActivityIndicator style={styles.loaderStyle}
+                size='large'
+                color='green'
+            />
+        }
+    }
+
+    getImagesAPICall(){
+        this.setState({
+            showLoader: true,
+        });
+        axios.get('https://picsum.photos/v2/list')
+        .then(response => {
+            console.log(response);
+            this.setState({
+                imageList: response.data,
+                showLoader: false,
+            });
+        })
+        .catch(error => {
+            console.log(error);
+            this.setState({
+                showLoader: false,
+            })
+        });
+    }
+
+    componentDidMount() {
+        this.getImagesAPICall();
+    }
+
+
     render() {
         const {ViewStyle, TextColor, HeaderViewStyle} = styles;
         const DATA = [
@@ -19,7 +60,7 @@ class ListViewScreen extends Component {
                 owner: 'Parth Bhambure'
             },
         ];
-
+        //this.getImagesAPICall();
 
         return (
             <View style={ViewStyle}>
@@ -36,13 +77,14 @@ class ListViewScreen extends Component {
                 </ScrollView> */}
 
                 <FlatList
-                    data={DATA}
+                    data={this.state.imageList}
                     renderItem={item => {
                         return (
-                            <ListCard image={item.item.image} ownerName={item.item.owner} />
+                            <ListCard image={item.item.download_url} ownerName={item.item.author} />
                         )
                     }}
                 />
+                {this.renderLoader()}
             </View>
         );
     }
@@ -64,6 +106,13 @@ const styles = StyleSheet.create({
         elevation: 10,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    loaderStyle: {
+        position: 'absolute',
+        right: 0,
+        left: 0,
+        top: 0,
+        bottom: 0
     },
 });
 

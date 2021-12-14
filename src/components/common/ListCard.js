@@ -60,4 +60,5 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ListCard;
+export {ListCard};
+//export default ListCard;

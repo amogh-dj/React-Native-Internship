@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, ScrollView, FlatList, ActivityIndicator} from 'react-native';
-import ListCard from './reusableComponents/ListCard';
+import {ListCard, TextField} from './common';
 import axios from 'axios';
+import {connect} from 'react-redux';
+import {imageSearchBoxValueChanged} from '../actions'
 
 class ListViewScreen extends Component {
 
@@ -25,7 +27,7 @@ class ListViewScreen extends Component {
         });
         axios.get('https://picsum.photos/v2/list')
         .then(response => {
-            console.log(response);
+            
             this.setState({
                 imageList: response.data,
                 showLoader: false,
@@ -47,18 +49,20 @@ class ListViewScreen extends Component {
     render() {
         const {ViewStyle, TextColor, HeaderViewStyle} = styles;
         const DATA = [
-            {
-                image: require('./cat2.jpg'),
+
+            /*{
+                image: require('../cat2.jpg'),
                 owner: 'Amogh Joshi'
             },
             {
-                image: require('./cat.jpg'),
+                image: require('../cat.jpg'),
                 owner: 'Radhey Borse'
             },
             {
-                image: require('./cat3.jpg'),
+                image: require('../cat3.jpg'),
                 owner: 'Parth Bhambure'
-            },
+            },*/
+
         ];
         //this.getImagesAPICall();
 
@@ -75,6 +79,14 @@ class ListViewScreen extends Component {
                     <ListCard image={require('./cat3.jpg')} ownerName="Parth Bhambure" />
                     <ListCard image={require('./cat.jpg')} ownerName="Radhey Borse" />
                 </ScrollView> */}
+
+                <TextField placeholder="Search" 
+                onChangeText={value => {
+                    //console.log('Value of text input changed to', value);
+                    this.props.imageSearchBoxValueChanged(value);
+                }}
+                value={this.props.image_search_value}
+                />
 
                 <FlatList
                     data={this.state.imageList}
@@ -116,4 +128,10 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ListViewScreen;
+const mapStateToProps = state => {
+    return {
+        image_search_value: state.imageListing.image_search,
+    }
+}
+
+export default connect(mapStateToProps, {imageSearchBoxValueChanged})(ListViewScreen);

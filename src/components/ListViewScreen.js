@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, ScrollView, FlatList, ActivityIndicator} from 'r
 import {ListCard, TextField} from './common';
 import axios from 'axios';
 import {connect} from 'react-redux';
-import {imageSearchBoxValueChanged} from '../actions'
+import {imageSearchBoxValueChanged, getImageListFromAPI, toggleImageListLoader} from '../actions'
 
 class ListViewScreen extends Component {
 
@@ -13,7 +13,8 @@ class ListViewScreen extends Component {
     };
 
     renderLoader() {
-        if (this.state.showLoader){
+        //if (this.state.showLoader){
+        if (this.props.showLoader){
             return <ActivityIndicator style={styles.loaderStyle}
                 size='large'
                 color='green'
@@ -42,7 +43,13 @@ class ListViewScreen extends Component {
     }
 
     componentDidMount() {
-        this.getImagesAPICall();
+        //this.getImagesAPICall();
+        //console.log('Here');
+        //console.log(this.props);
+        //console.log('Here too!');
+        //this.props.toggleImageListLoader(true);
+        this.props.getImageListFromAPI();
+        //this.props.toggleImageListLoader(false);
     }
 
 
@@ -83,13 +90,15 @@ class ListViewScreen extends Component {
                 <TextField placeholder="Search" 
                 onChangeText={value => {
                     //console.log('Value of text input changed to', value);
-                    this.props.imageSearchBoxValueChanged(value);
+                    this.props.imageSearchBoxValueChanged(this.props.image_list, value);
                 }}
                 value={this.props.image_search_value}
                 />
 
                 <FlatList
-                    data={this.state.imageList}
+                    //data={this.state.imageList}
+                    //data={this.props.image_list}
+                    data={this.props.filtered_image_list}
                     renderItem={item => {
                         return (
                             <ListCard image={item.item.download_url} ownerName={item.item.author} />
@@ -131,7 +140,10 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
     return {
         image_search_value: state.imageListing.image_search,
+        image_list: state.imageListing.image_list,
+        showLoader: state.imageListing.showLoader,
+        filtered_image_list: state.imageListing.filtered_image_list,
     }
 }
 
-export default connect(mapStateToProps, {imageSearchBoxValueChanged})(ListViewScreen);
+export default connect(mapStateToProps, {imageSearchBoxValueChanged, getImageListFromAPI, toggleImageListLoader})(ListViewScreen);

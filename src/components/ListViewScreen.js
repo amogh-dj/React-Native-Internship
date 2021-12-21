@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, ScrollView, FlatList, ActivityIndicator} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, FlatList, ActivityIndicator, TouchableOpacity} from 'react-native';
 import {ListCard, TextField} from './common';
 import axios from 'axios';
 import {connect} from 'react-redux';
@@ -75,11 +75,11 @@ class ListViewScreen extends Component {
 
         return (
             <View style={ViewStyle}>
-                <View style={HeaderViewStyle}>
+                {/* <View style={HeaderViewStyle}>
                     <Text style={TextColor}>
                         Image Gallery
                     </Text>
-                </View>
+                </View> */}
 
                 {/* <ScrollView>
                     <ListCard image={require('./cat2.jpg')} ownerName="Amogh Joshi" />
@@ -94,15 +94,30 @@ class ListViewScreen extends Component {
                 }}
                 value={this.props.image_search_value}
                 />
+                {/* <TouchableOpacity onPress={() => {
+                    console.log('Lets Navigate to next screen using this.props', this.props);
+                    this.props.navigation.navigate('Image Details');
 
+                }}>
+                    <Text>Go to details Screen!</Text>
+                </TouchableOpacity> */}
                 <FlatList
                     //data={this.state.imageList}
                     //data={this.props.image_list}
                     data={this.props.filtered_image_list}
                     renderItem={item => {
                         return (
-                            <ListCard image={item.item.download_url} ownerName={item.item.author} />
-                        )
+                            <ListCard 
+                                image={item.item.download_url} 
+                                ownerName={item.item.author} 
+                                detailsOnPress={() => {
+                                    this.props.navigation.navigate('Image Details', {
+                                        // Pass Data Params with Navgitation in form of key value pairs
+                                        image_id: item.item.id,
+                                    });
+                                }}
+                            />
+                        );
                     }}
                 />
                 {this.renderLoader()}

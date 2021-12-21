@@ -8,7 +8,7 @@ class ListCard extends Component{
     render(){
 
         const {imageStyle, cardStyle, textViewStyle, tColor, downloadButtonStyle} = styles;
-        const {image, ownerName} = this.props;
+        const {image, ownerName, detailsOnPress} = this.props;
         return (
             <View style={cardStyle}>
                 <Image style={imageStyle} source={{uri: image}} />
@@ -17,10 +17,12 @@ class ListCard extends Component{
                 </View>
                 <TouchableOpacity 
                     style={downloadButtonStyle}
-                    onPress={() => {
-                        Alert.alert("Download Button Pressed");
-                    }}>
-                    <Text style={{color:'white', fontWeight: 'bold', fontSize: 25}}>Download</Text>
+                    // onPress={() => {
+                    //     Alert.alert("Download Button Pressed");
+                    //}}
+                    onPress={detailsOnPress}
+                    >
+                    <Text style={{color:'white', fontWeight: 'bold', fontSize: 25}}>View Details</Text>
                 </TouchableOpacity>
             </View>
         )
